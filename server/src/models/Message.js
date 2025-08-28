@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 const messageSchema = new mongoose.Schema(
   {
     group: {
@@ -10,14 +12,14 @@ const messageSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    type: { type: String, enum: ["text", "image", "audio"], default: "text" },
-    text: String,
-    mediaUrl: String,
+    text: { type: String, trim: true },
+    imageUrl: { type: String },
+    voiceUrl: { type: String },
     readBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   { timestamps: true }
 );
 
-const Message = mongoose.model("Message", messageSchema);
+messageSchema.index({ group: 1, createdAt: -1 });
 
-module.exports = Message;
+export default mongoose.model("Message", messageSchema);

@@ -1,22 +1,22 @@
-// backend/src/app.js
-const express = require("express");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
-const morgan = require("morgan");
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import path from "path";
+import authRoutes from "./routes/auth.js";
+import groupRoutes from "./routes/groups.js";
+import messageRoutes from "./routes/messages.js";
 
-const authRoutes = require("./routes/authRoutes");
-const groupRoutes = require("./routes/groupRoutes");
-const messageRoutes = require("./routes/messageRoutes");
+dotenv.config();
 
 const app = express();
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(express.json());
-app.use(cookieParser());
-app.use(morgan("dev"));
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+
+// serve uploaded files statically
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/groups", groupRoutes);
 app.use("/api/messages", messageRoutes);
 
-app.use((req, res) => res.status(404).json({ message: "Not found" }));
-module.exports = app;
+export default app;

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const memberSchema = new mongoose.Schema(
   {
@@ -17,7 +17,7 @@ const groupSchema = new mongoose.Schema(
       required: true,
     },
     members: [memberSchema],
-    lastMessage: { type: mongoose.Schema.Types.ObjectId, ref: "Message" }, // quick preview
+    lastMessage: { type: mongoose.Schema.Types.ObjectId, ref: "Message" },
   },
   { timestamps: true }
 );
@@ -26,4 +26,4 @@ groupSchema.methods.isAdmin = function (userId) {
   return this.members.some((m) => m.user.equals(userId) && m.role === "admin");
 };
 
-module.exports = mongoose.model("Group", groupSchema);
+export default mongoose.model("Group", groupSchema);
